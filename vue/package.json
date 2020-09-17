@@ -12,7 +12,10 @@
     "dist/*.js",
     "types/*.d.ts"
   ],
-  "scripts": {
+  // npm 提供了一个npm script，之前早期构建Grunt、Gulp，他们两个都是以任务为基准的，定义一系列任务。
+  // npm script就是完成了这一部分功能，定义了很多的脚本，每个脚本都是一个任务，
+  // 通过npm run这个值就可以执行不同的任务
+  "scripts": { 
     "dev": "rollup -w -c scripts/config.js --environment TARGET:web-full-dev",
     "dev:cjs": "rollup -w -c scripts/config.js --environment TARGET:web-runtime-cjs",
     "dev:esm": "rollup -w -c scripts/config.js --environment TARGET:web-runtime-esm",
@@ -22,7 +25,10 @@
     "dev:weex": "rollup -w -c scripts/config.js --environment TARGET:weex-framework",
     "dev:weex:factory": "rollup -w -c scripts/config.js --environment TARGET:weex-factory",
     "dev:weex:compiler": "rollup -w -c scripts/config.js --environment TARGET:weex-compiler ",
-    "build": "node scripts/build.js",
+    // 构建相关的就是以下三个，build就是构建web平台相关的一些vuejs
+    // ssr就是输出一些和server render相关
+    // weex就是和weex相关
+    "build": "node scripts/build.js", // 执行scripts/build.js代码
     "build:ssr": "npm run build -- web-runtime-cjs,web-server-renderer",
     "build:weex": "npm run build -- weex",
     "test": "npm run lint && flow check && npm run test:types && npm run test:cover && npm run test:e2e -- --env phantomjs && npm run test:ssr && npm run test:weex",

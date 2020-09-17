@@ -23,8 +23,9 @@ const weexFactoryPlugin = {
     return '}'
   }
 }
-
+// alias 存放为src中每个文件夹的绝对路径
 const aliases = require('./alias')
+// 生成文件绝对路径的方法
 const resolve = p => {
   const base = p.split('/')[0]
   if (aliases[base]) {
@@ -34,13 +35,14 @@ const resolve = p => {
   }
 }
 
+// 不同版本vuejs的编译配置（入口文件地址，出口文件地址、构建完成的文件格式、注释等）
 const builds = {
   // Runtime only (CommonJS). Used by bundlers e.g. Webpack & Browserify
   'web-runtime-cjs': {
-    entry: resolve('web/entry-runtime.js'),
-    dest: resolve('dist/vue.runtime.common.js'),
-    format: 'cjs',
-    banner
+    entry: resolve('web/entry-runtime.js'), // 入口，resolve方法生成文件的绝对路径
+    dest: resolve('dist/vue.runtime.common.js'), // 目标文件（编译生成的文件）
+    format: 'cjs', // 构建出来的文件格式（es6\amd\commonjs...)
+    banner // 注释(库的版本，谁创建的、等)
   },
   // Runtime+compiler CommonJS build (CommonJS)
   'web-full-cjs': {
@@ -168,9 +170,11 @@ const builds = {
   }
 }
 
+// 入参为要编译的vue版本
 function genConfig (name) {
+  // 要编译的vue版本对应的入口文件地址，出口文件地址、构建完成的文件格式、注释等
   const opts = builds[name]
-  const config = {
+  const config = { // rollup真正所需要的的配置
     input: opts.entry,
     external: opts.external,
     plugins: [
@@ -209,5 +213,6 @@ if (process.env.TARGET) {
   module.exports = genConfig(process.env.TARGET)
 } else {
   exports.getBuild = genConfig
+  // 获取所有vue版本对应的Rollup所需的config
   exports.getAllBuilds = () => Object.keys(builds).map(genConfig)
 }
