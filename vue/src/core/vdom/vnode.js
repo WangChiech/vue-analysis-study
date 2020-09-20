@@ -70,6 +70,7 @@ export default class VNode {
   }
 }
 
+// 注释VNode
 export const createEmptyVNode = (text: string = '') => {
   const node = new VNode()
   node.text = text

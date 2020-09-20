@@ -33,14 +33,17 @@ export function createElement (
   normalizationType: any,
   alwaysNormalize: boolean
 ): VNode | Array<VNode> {
+  // 对参数不一致的情况进行处理
   if (Array.isArray(data) || isPrimitive(data)) {
     normalizationType = children
     children = data
     data = undefined
   }
   if (isTrue(alwaysNormalize)) {
+    // SIMPLE_NORMALIZE：1|ALWAYS_NORMALIZE：2
     normalizationType = ALWAYS_NORMALIZE
   }
+  // createElement实际就是对参数做了一层封装，之后交由_createElement
   return _createElement(context, tag, data, children, normalizationType)
 }
 
@@ -51,6 +54,7 @@ export function _createElement (
   children?: any,
   normalizationType?: number
 ): VNode | Array<VNode> {
+  // 对data做校验，不能是响应式的
   if (isDef(data) && isDef((data: any).__ob__)) {
     process.env.NODE_ENV !== 'production' && warn(
       `Avoid using observed data object as vnode data: ${JSON.stringify(data)}\n` +
@@ -88,11 +92,13 @@ export function _createElement (
     children.length = 0
   }
   if (normalizationType === ALWAYS_NORMALIZE) {
+    // normalizeChildren、simpleNormalizeChildren在helps中定义
     children = normalizeChildren(children)
   } else if (normalizationType === SIMPLE_NORMALIZE) {
     children = simpleNormalizeChildren(children)
   }
   let vnode, ns
+  // 判断是不是组件
   if (typeof tag === 'string') {
     let Ctor
     ns = (context.$vnode && context.$vnode.ns) || config.getTagNamespace(tag)

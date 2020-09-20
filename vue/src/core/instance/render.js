@@ -27,9 +27,11 @@ export function initRender (vm: Component) {
   // so that we get proper render context inside it.
   // args order: tag, data, children, normalizationType, alwaysNormalize
   // internal version is used by render functions compiled from templates
+  // 被编译生成的render函数创建VNode所使用的的方法
   vm._c = (a, b, c, d) => createElement(vm, a, b, c, d, false)
   // normalization is always applied for the public version, used in
   // user-written render functions.
+  // 手写render函数，创建VNode的方法
   vm.$createElement = (a, b, c, d) => createElement(vm, a, b, c, d, true)
 
   // $attrs & $listeners are exposed for easier HOC creation.
@@ -57,9 +59,10 @@ export function renderMixin (Vue: Class<Component>) {
   Vue.prototype.$nextTick = function (fn: Function) {
     return nextTick(fn, this)
   }
-
+  // render方法，返回VNode
   Vue.prototype._render = function (): VNode {
     const vm: Component = this
+    // vm.$options的render函数可以用户自己写，也可以通过编译生成
     const { render, _parentVnode } = vm.$options
 
     // reset _rendered flag on slots for duplicate slot check
@@ -102,6 +105,7 @@ export function renderMixin (Vue: Class<Component>) {
       }
     }
     // return empty vnode in case the render function errored out
+    // 只能有一个VNode
     if (!(vnode instanceof VNode)) {
       if (process.env.NODE_ENV !== 'production' && Array.isArray(vnode)) {
         warn(

@@ -13,8 +13,9 @@ const idToTemplate = cached(id => {
   const el = query(id)
   return el && el.innerHTML
 })
-
+// 缓存Vue.prototype.$mount
 const mount = Vue.prototype.$mount
+// runtime compiler 版本$mount方法
 Vue.prototype.$mount = function (
   el?: string | Element,
   hydrating?: boolean

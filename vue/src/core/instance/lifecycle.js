@@ -48,7 +48,9 @@ export function initLifecycle (vm: Component) {
 }
 
 export function lifecycleMixin (Vue: Class<Component>) {
+  // _update调用时期有两个，①首次渲染的时候把VNode映射成真实的Dom；②当我们改变数据的时候，数据驱动视图变化
   Vue.prototype._update = function (vnode: VNode, hydrating?: boolean) {
+    // 定义变量给之后数据分析用（数据驱动视图 情况）
     const vm: Component = this
     const prevEl = vm.$el
     const prevVnode = vm._vnode
@@ -59,6 +61,7 @@ export function lifecycleMixin (Vue: Class<Component>) {
     // based on the rendering backend used.
     if (!prevVnode) {
       // initial render
+      // 首次渲染情况，__patch__定义在入口文件runtime中的index.js
       vm.$el = vm.__patch__(vm.$el, vnode, hydrating, false /* removeOnly */)
     } else {
       // updates
