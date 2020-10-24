@@ -122,6 +122,7 @@ export function _createElement (
     }
   } else {
     // direct component options / constructor
+    // render函数传入的是组件
     vnode = createComponent(tag, data, context, children)
   }
   if (Array.isArray(vnode)) {
@@ -164,3 +165,13 @@ function registerDeepBindings (data) {
     traverse(data.class)
   }
 }
+
+foo()
+var foo
+foo = function () {
+  console.log(2)
+}
+function foo() {
+  console.log(1)
+}
+foo()

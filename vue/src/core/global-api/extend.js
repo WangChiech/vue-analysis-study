@@ -10,6 +10,7 @@ export function initExtend (Vue: GlobalAPI) {
    * cid. This enables us to create wrapped "child
    * constructors" for prototypal inheritance and cache them.
    */
+  // cid 构造器的唯一标识
   Vue.cid = 0
   let cid = 1
 
@@ -20,6 +21,7 @@ export function initExtend (Vue: GlobalAPI) {
     extendOptions = extendOptions || {}
     const Super = this
     const SuperId = Super.cid
+    // 做了一层缓存的优化
     const cachedCtors = extendOptions._Ctor || (extendOptions._Ctor = {})
     if (cachedCtors[SuperId]) {
       return cachedCtors[SuperId]
@@ -27,15 +29,18 @@ export function initExtend (Vue: GlobalAPI) {
 
     const name = extendOptions.name || Super.options.name
     if (process.env.NODE_ENV !== 'production' && name) {
+      // 开发环境对组件name做一层校验
       validateComponentName(name)
     }
 
+    // 定义一个子的构造函数，子的构造函数的原型指向父的构造器的原型（原型继承）
     const Sub = function VueComponent (options) {
       this._init(options)
     }
     Sub.prototype = Object.create(Super.prototype)
     Sub.prototype.constructor = Sub
     Sub.cid = cid++
+    // 配置合并
     Sub.options = mergeOptions(
       Super.options,
       extendOptions
